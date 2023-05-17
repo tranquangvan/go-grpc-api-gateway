@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  postgres-auth:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=auth_svc
+    ports:
+      - "5451:5432"
+    networks:
+        grpc_gateway:
+          ipv4_address: 182.20.0.2
+    volumes:
+      - data-auth:/var/lib/postgresql/data
+  postgres-order:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=order_svc
+    ports:
+      - "5452:5432"
+    networks:
+        grpc_gateway:
+          ipv4_address: 182.20.0.3
+    volumes:
+      - data-order:/var/lib/postgresql/data
+  postgres-product:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=product_svc
+    ports:
+      - "5453:5432"
+    networks:
+        grpc_gateway:
+          ipv4_address: 182.20.0.4
+    volumes:
+      - data-product:/var/lib/postgresql/data
+volumes:
+  data-auth:
+  data-order:
+  data-product:
+networks:
+  grpc_gateway:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 182.20.0.0/24
+          gateway: 182.20.0.1
